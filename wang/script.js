@@ -1,16 +1,26 @@
-// using d3 for convenience
+
+
+  // using d3 for convenience
 var main = d3.select("main");
 var scrolly = main.select("#scrolly");
 var figure = scrolly.select("figure");
 var article = scrolly.select("article");
 var step = article.selectAll(".step");
 
+// Array of image URLs for each step
+var images = [
+  "images/scrolly1.gif",
+  "images/scrolly2.gif",
+  "images/scrolly3.gif",
+  "images/scrolly4.gif"
+];
+
 // initialize the scrollama
 var scroller = scrollama();
 
 // generic window resize listener event
 function handleResize() {
-  // 1. update height of step elements
+  // update height of step elements
   var stepH = Math.floor(window.innerHeight * 0.75);
   step.style("height", stepH + "px");
 
@@ -21,7 +31,7 @@ function handleResize() {
     .style("height", figureHeight + "px")
     .style("top", figureMarginTop + "px");
 
-  // 3. tell scrollama to update new element dimensions
+  // tell scrollama to update new element dimensions
   scroller.resize();
 }
 
@@ -30,24 +40,23 @@ function handleStepEnter(response) {
   console.log(response);
   // response = { element, direction, index }
 
-  // add color to current step only
+  // Highlight the active step
   step.classed("is-active", function (d, i) {
     return i === response.index;
   });
 
-  // update graphic based on step
-  figure.select("p").text(response.index + 1);
+  // Update image based on the step index
+  figure.select("img").attr("src", images[response.index]);
+
+  // Optional: update any text if needed
+  figure.select("p").text(" ");
 }
 
-
 function init() {
-
-  // 1. force a resize on load to ensure proper dimensions are sent to scrollama
+  // Force a resize on load to ensure proper dimensions are sent to scrollama
   handleResize();
 
-  // 2. setup the scroller passing options
-  // 		this will also initialize trigger observations
-  // 3. bind scrollama event handlers (this can be chained like below)
+  // Setup the scroller with options and event handlers
   scroller
     .setup({
       step: "#scrolly article .step",
@@ -57,21 +66,9 @@ function init() {
     .onStepEnter(handleStepEnter);
 }
 
-// kick things off
+// Initialize
 init();
-  
-  
-  
 
-
-if (typeof d3 !== 'undefined') {
-    console.log("D3 is loaded!");
-  } else {
-    console.log("D3 is not loaded!");
-  }
-  
-
-  
 
 
 
